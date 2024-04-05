@@ -1,0 +1,16 @@
+--------------------------------------------------------
+--  DDL for Trigger XDO_TEMPLATES_DL
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."XDO_TEMPLATES_DL" 
+instead of delete on XDO_TEMPLATES_VL
+referencing old as XDO_TEMPLATES_TABLE_HANDLER
+for each row
+begin
+  XDO_TEMPLATES_PKG.DELETE_ROW(
+    X_APPLICATION_SHORT_NAME => :XDO_TEMPLATES_TABLE_HANDLER.APPLICATION_SHORT_NAME,
+    X_TEMPLATE_CODE => :XDO_TEMPLATES_TABLE_HANDLER.TEMPLATE_CODE);
+end DELETE_ROW;
+
+/
+ALTER TRIGGER "APPS"."XDO_TEMPLATES_DL" ENABLE;

@@ -1,0 +1,30 @@
+--------------------------------------------------------
+--  DDL for Trigger JTF_TERR_RSC_ACCESS_BIUD
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."JTF_TERR_RSC_ACCESS_BIUD" 
+BEFORE INSERT  OR DELETE  OR UPDATE
+ON "JTF"."JTF_TERR_RSC_ACCESS_ALL"
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+DECLARE
+  terr_rsc_id           NUMBER;
+BEGIN
+  IF INSERTING THEN
+     terr_rsc_id        := :new.terr_rsc_id;
+  ELSIF UPDATING THEN
+     terr_rsc_id        := :new.terr_rsc_id;
+  ELSIF DELETING THEN
+     terr_rsc_id        := :old.terr_rsc_id;
+  END IF;
+
+  JTY_TERR_TRIGGER_HANDLERS.Terr_RscAccess_Trigger_Handler(
+    terr_rsc_id);
+EXCEPTION
+  when others then
+    FND_MSG_PUB.Add_Exc_Msg( 'jtf_terr_rsc_access_biud', 'Others exception inside TERR_RSC_ACCESS trigger: ' || sqlerrm);
+END jtf_terr_rsc_access_biud;
+
+
+/
+ALTER TRIGGER "APPS"."JTF_TERR_RSC_ACCESS_BIUD" ENABLE;

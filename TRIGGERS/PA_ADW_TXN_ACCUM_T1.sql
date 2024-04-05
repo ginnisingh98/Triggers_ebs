@@ -1,0 +1,42 @@
+--------------------------------------------------------
+--  DDL for Trigger PA_ADW_TXN_ACCUM_T1
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."PA_ADW_TXN_ACCUM_T1" 
+-- $Header: PATRIG01.pls 115.5 99/07/16 15:14:43 porting ship  $
+BEFORE UPDATE OF
+  -- Columns required for data warehouse
+  TOT_REVENUE,
+  TOT_RAW_COST,
+  TOT_BURDENED_COST,
+  TOT_QUANTITY,
+  TOT_LABOR_HOURS,
+  TOT_BILLABLE_RAW_COST,
+  TOT_BILLABLE_BURDENED_COST,
+  TOT_BILLABLE_QUANTITY,
+  TOT_BILLABLE_LABOR_HOURS,
+  TOT_CMT_RAW_COST,
+  TOT_CMT_BURDENED_COST,
+  TOT_CMT_QUANTITY,
+  UNIT_OF_MEASURE
+ON "PA"."PA_TXN_ACCUM"
+FOR EACH ROW
+
+DECLARE
+  X_ADW_LICENSED VARCHAR2(1) := NVL(FND_PROFILE.VALUE('PA_ADW_LICENSED'),'N');
+BEGIN
+
+--Fire Trigger only PA_ADW is Licensed
+ IF X_ADW_LICENSED <> 'Y' THEN
+    RETURN;
+ END IF;
+
+  IF (:OLD.ADW_NOTIFY_FLAG <> 'Y') THEN
+    :NEW.ADW_NOTIFY_FLAG := 'Y';
+  END IF;
+END;
+
+
+
+/
+ALTER TRIGGER "APPS"."PA_ADW_TXN_ACCUM_T1" ENABLE;

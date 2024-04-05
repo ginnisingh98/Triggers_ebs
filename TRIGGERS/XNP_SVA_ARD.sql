@@ -1,0 +1,177 @@
+--------------------------------------------------------
+--  DDL for Trigger XNP_SVA_ARD
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."XNP_SVA_ARD" 
+AFTER DELETE ON "XNP"."XNP_SV_SOA"
+FOR EACH ROW
+
+BEGIN
+    INSERT INTO XNP_SV_SOA_JN
+        (JN_OPERATION
+        ,JN_ORACLE_USER
+        ,JN_DATETIME
+        ,JN_NOTES
+        ,JN_APPLN
+        ,JN_SESSION
+        ,SV_SOA_ID
+        ,OBJECT_REFERENCE
+        ,SUBSCRIPTION_TN
+        ,SUBSCRIPTION_TYPE
+        ,DONOR_SP_ID
+        ,RECIPIENT_SP_ID
+        ,STATUS_TYPE_CODE
+        ,PTO_FLAG
+        ,CREATED_BY_SP_ID
+        ,CHANGED_BY_SP_ID
+        ,MEDIATOR_SP_ID
+        ,ROUTING_NUMBER_ID
+        ,PRE_SPLIT_SUBSCRIPTION_TN
+        ,PREV_STATUS_TYPE_CODE
+        ,CNAM_ADDRESS
+        ,CNAM_SUBSYSTEM
+        ,ISVM_ADDRESS
+        ,ISVM_SUBSYSTEM
+        ,LIDB_ADDRESS
+        ,LIDB_SUBSYSTEM
+        ,CLASS_ADDRESS
+        ,CLASS_SUBSYSTEM
+        ,WSMSC_ADDRESS
+        ,WSMSC_SUBSYSTEM
+        ,RN_ADDRESS
+        ,RN_SUBSYSTEM
+        ,ACTIVATION_DUE_DATE
+        ,NEW_SP_DUE_DATE
+        ,OLD_SP_DUE_DATE
+        ,OLD_SP_CUTOFF_DUE_DATE
+        ,EFFECTIVE_RELEASE_DUE_DATE
+        ,NUMBER_RETURNED_DUE_DATE
+        ,DISCONNECT_DUE_DATE
+        ,STATUS_CHANGE_DATE
+        ,CREATED_DATE
+        ,MODIFIED_DATE
+        ,CONCURRENCE_FLAG
+        ,NEW_SP_AUTHORIZATION_FLAG
+        ,OLD_SP_AUTHORIZATION_FLAG
+        ,RETAIN_DIR_INFO_FLAG
+        ,RETAIN_TN_FLAG
+        ,BLOCKED_FLAG
+        ,LOCKED_FLAG
+        ,CUSTOMER_CONTACT_REQ_FLAG
+        ,BILLING_ID
+        ,USER_LOCTN_VALUE
+        ,USER_LOCTN_TYPE
+        ,ORDER_PRIORITY
+        ,STATUS_CHANGE_CAUSE_CODE
+        ,PREORDER_AUTHORIZATION_CODE
+        ,CUSTOMER_ID
+        ,CUSTOMER_NAME
+        ,CUSTOMER_TYPE
+        ,CONTACT_NAME
+        ,ADDRESS_LINE1
+        ,ADDRESS_LINE2
+        ,CITY
+        ,STATE
+        ,ZIP_CODE
+        ,COUNTRY
+        ,PHONE
+        ,MOBILE
+        ,FAX
+        ,PAGER
+        ,PAGER_PIN
+        ,EMAIL
+        ,INTERNET_ADDRESS
+        ,PRICE_CODE
+        ,PRICE_PER_CALL
+        ,PRICE_PER_MINUTE
+        ,CREATED_BY
+        ,CREATION_DATE
+        ,LAST_UPDATED_BY
+        ,LAST_UPDATE_DATE)
+    VALUES
+        ('DEL'
+        ,USER
+        ,SYSDATE
+        ,NULL
+        ,NULL
+        ,userenv('sessionid')
+        ,:OLD.SV_SOA_ID
+        ,:OLD.OBJECT_REFERENCE
+        ,:OLD.SUBSCRIPTION_TN
+        ,:OLD.SUBSCRIPTION_TYPE
+        ,:OLD.DONOR_SP_ID
+        ,:OLD.RECIPIENT_SP_ID
+        ,:OLD.STATUS_TYPE_CODE
+        ,:OLD.PTO_FLAG
+        ,:OLD.CREATED_BY_SP_ID
+        ,:OLD.CHANGED_BY_SP_ID
+        ,:OLD.MEDIATOR_SP_ID
+        ,:OLD.ROUTING_NUMBER_ID
+        ,:OLD.PRE_SPLIT_SUBSCRIPTION_TN
+        ,:OLD.PREV_STATUS_TYPE_CODE
+        ,:OLD.CNAM_ADDRESS
+        ,:OLD.CNAM_SUBSYSTEM
+        ,:OLD.ISVM_ADDRESS
+        ,:OLD.ISVM_SUBSYSTEM
+        ,:OLD.LIDB_ADDRESS
+        ,:OLD.LIDB_SUBSYSTEM
+        ,:OLD.CLASS_ADDRESS
+        ,:OLD.CLASS_SUBSYSTEM
+        ,:OLD.WSMSC_ADDRESS
+        ,:OLD.WSMSC_SUBSYSTEM
+        ,:OLD.RN_ADDRESS
+        ,:OLD.RN_SUBSYSTEM
+        ,:OLD.ACTIVATION_DUE_DATE
+        ,:OLD.NEW_SP_DUE_DATE
+        ,:OLD.OLD_SP_DUE_DATE
+        ,:OLD.OLD_SP_CUTOFF_DUE_DATE
+        ,:OLD.EFFECTIVE_RELEASE_DUE_DATE
+        ,:OLD.NUMBER_RETURNED_DUE_DATE
+        ,:OLD.DISCONNECT_DUE_DATE
+        ,:OLD.STATUS_CHANGE_DATE
+        ,:OLD.CREATED_DATE
+        ,:OLD.MODIFIED_DATE
+        ,:OLD.CONCURRENCE_FLAG
+        ,:OLD.NEW_SP_AUTHORIZATION_FLAG
+        ,:OLD.OLD_SP_AUTHORIZATION_FLAG
+        ,:OLD.RETAIN_DIR_INFO_FLAG
+        ,:OLD.RETAIN_TN_FLAG
+        ,:OLD.BLOCKED_FLAG
+        ,:OLD.LOCKED_FLAG
+        ,:OLD.CUSTOMER_CONTACT_REQ_FLAG
+        ,:OLD.BILLING_ID
+        ,:OLD.USER_LOCTN_VALUE
+        ,:OLD.USER_LOCTN_TYPE
+        ,:OLD.ORDER_PRIORITY
+        ,:OLD.STATUS_CHANGE_CAUSE_CODE
+        ,:OLD.PREORDER_AUTHORIZATION_CODE
+        ,:OLD.CUSTOMER_ID
+        ,:OLD.CUSTOMER_NAME
+        ,:OLD.CUSTOMER_TYPE
+        ,:OLD.CONTACT_NAME
+        ,:OLD.ADDRESS_LINE1
+        ,:OLD.ADDRESS_LINE2
+        ,:OLD.CITY
+        ,:OLD.STATE
+        ,:OLD.ZIP_CODE
+        ,:OLD.COUNTRY
+        ,:OLD.PHONE
+        ,:OLD.MOBILE
+        ,:OLD.FAX
+        ,:OLD.PAGER
+        ,:OLD.PAGER_PIN
+        ,:OLD.EMAIL
+        ,:OLD.INTERNET_ADDRESS
+        ,:OLD.PRICE_CODE
+        ,:OLD.PRICE_PER_CALL
+        ,:OLD.PRICE_PER_MINUTE
+        ,:OLD.CREATED_BY
+        ,:OLD.CREATION_DATE
+        ,:OLD.LAST_UPDATED_BY
+        ,:OLD.LAST_UPDATE_DATE);
+END;
+
+
+
+/
+ALTER TRIGGER "APPS"."XNP_SVA_ARD" ENABLE;

@@ -1,0 +1,105 @@
+--------------------------------------------------------
+--  DDL for Trigger XTR_AID_INTERGROUP_TRANSFERS_T
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."XTR_AID_INTERGROUP_TRANSFERS_T" 
+ AFTER INSERT or DELETE on "XTR"."XTR_INTERGROUP_TRANSFERS"
+ FOR EACH ROW
+declare
+ --
+ --
+ L_SUBTYPE	 	VARCHAR2(7);
+ L_PRODUCT_TYPE	 	VARCHAR2(10);
+ L_PORTFOLIO	 	VARCHAR2(10);
+ L_CPARTY_CODE	 	VARCHAR2(7);
+ L_COMPANY_CODE	 	VARCHAR2(7);
+ L_CURRENCY		VARCHAR2(15);
+ L_YEAR_CALC_TYPE	VARCHAR2(15);
+ L_ACTION 		VARCHAR2(10);
+ L_ACCOUNT_NO 		VARCHAR2(50);
+ L_START_DATE		DATE;
+ L_AMOUNT		NUMBER;
+ L_DEAL_NUMBER		NUMBER;
+ L_TRANSACTION_NUMBER	NUMBER;
+ L_INTEREST_RATE	NUMBER;
+
+ cursor GET_YEAR_CALC_TYPE is
+  select IG_YEAR_BASIS
+  from XTR_MASTER_CURRENCIES
+  where CURRENCY = L_CURRENCY;
+
+begin
+---
+if inserting then
+ L_ACTION :='UPDATE';  --- same as CA using UPDATE
+ L_PRODUCT_TYPE	:=:NEW.PRODUCT_TYPE;
+ L_PORTFOLIO :=:NEW.PORTFOLIO;
+ L_START_DATE :=:NEW.TRANSFER_DATE;
+ L_AMOUNT :=nvl(:NEW.BALANCE_OUT,0);
+ L_DEAL_NUMBER :=:NEW.DEAL_NUMBER;
+ L_TRANSACTION_NUMBER :=:NEW.TRANSACTION_NUMBER;
+ L_INTEREST_RATE :=nvl(:NEW.INTEREST_RATE,0);
+ L_COMPANY_CODE :=:NEW.COMPANY_CODE;
+ L_CPARTY_CODE :=:NEW.PARTY_CODE;
+ L_CPARTY_CODE :=:NEW.PARTY_CODE;
+ L_CURRENCY :=:NEW.CURRENCY;
+ L_ACCOUNT_NO :=:NEW.PARTY_ACCOUNT_NO;
+else
+ L_ACTION :='DELETE';
+ L_PRODUCT_TYPE	:=:OLD.PRODUCT_TYPE;
+ L_PORTFOLIO :=:OLD.PORTFOLIO;
+ L_START_DATE :=:OLD.TRANSFER_DATE;
+ L_AMOUNT :=nvl(:OLD.BALANCE_OUT,0);
+ L_DEAL_NUMBER :=:OLD.DEAL_NUMBER;
+ L_TRANSACTION_NUMBER :=:OLD.TRANSACTION_NUMBER;
+ L_INTEREST_RATE :=nvl(:OLD.INTEREST_RATE,0);
+ L_COMPANY_CODE :=:OLD.COMPANY_CODE;
+ L_CPARTY_CODE :=:OLD.PARTY_CODE;
+ L_CURRENCY :=:OLD.CURRENCY;
+ L_ACCOUNT_NO :=:OLD.PARTY_ACCOUNT_NO;
+end if;
+
+ open GET_YEAR_CALC_TYPE;
+ fetch GET_YEAR_CALC_TYPE into L_YEAR_CALC_TYPE;
+ close GET_YEAR_CALC_TYPE;
+
+--bug 3305424: if L_START_DATE <trunc(sysdate) then
+     if L_AMOUNT <0 then
+        L_SUBTYPE :='FUND';
+     else
+        L_SUBTYPE :='INVEST';
+     end if;
+
+     XTR_COF_P.MAINTAIN_POSITION_HISTORY(
+        P_START_DATE                  => L_START_DATE,
+        P_MATURITY_DATE               => NULL,
+        P_OTHER_DATE                  => NULL,
+        P_DEAL_NUMBER                 => L_DEAL_NUMBER,
+        P_TRANSACTION_NUMBER          => L_TRANSACTION_NUMBER,
+        P_COMPANY_CODE                => L_COMPANY_CODE,
+        P_CURRENCY                    => L_CURRENCY,
+        P_DEAL_TYPE                   => 'IG',
+        P_DEAL_SUBTYPE                => L_SUBTYPE,
+        P_PRODUCT_TYPE                => L_PRODUCT_TYPE,
+        P_PORTFOLIO_CODE              => L_PORTFOLIO,
+        P_CPARTY_CODE                 => L_CPARTY_CODE,
+        P_CONTRA_CCY                  => NULL,
+        P_CURRENCY_COMBINATION        => NULL,
+        P_ACCOUNT_NO                  => L_ACCOUNT_NO,
+        P_TRANSACTION_RATE            => L_INTEREST_RATE,
+        P_YEAR_CALC_TYPE              => nvl(L_YEAR_CALC_TYPE,'ACTUAL/ACTUAL'),
+        P_BASE_REF_AMOUNT             => L_AMOUNT,
+        P_BASE_RATE                   => NULL,
+        P_STATUS_CODE                 => 'CURRENT',
+        P_INTEREST                    => NULL,
+        P_MATURITY_AMOUNT             => NULL,
+        P_START_AMOUNT                => NULL,
+        P_CALC_BASIS                  => NULL,
+        P_CALC_TYPE                   => NULL,
+        P_ACTION                      => L_ACTION,
+	P_DAY_COUNT_TYPE	      => :NEW.DAY_COUNT_TYPE, -- Added for Interest Override
+	P_FIRST_TRANS_FLAG	      => NULL);
+--bug 3305424: end if;
+end;
+/
+ALTER TRIGGER "APPS"."XTR_AID_INTERGROUP_TRANSFERS_T" ENABLE;

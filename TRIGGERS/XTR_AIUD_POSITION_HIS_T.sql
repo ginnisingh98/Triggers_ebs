@@ -1,0 +1,66 @@
+--------------------------------------------------------
+--  DDL for Trigger XTR_AIUD_POSITION_HIS_T
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."XTR_AIUD_POSITION_HIS_T" 
+ AFTER INSERT or DELETE or UPDATE on "XTR"."XTR_POSITION_HISTORY"
+ FOR EACH ROW
+
+declare
+  L_ACTION VARCHAR2(10);
+--
+begin
+  if inserting then
+    L_ACTION :='INSERT';
+  elsif deleting then
+    L_ACTION :='DELETE';
+  else
+    L_ACTION :='UPDATE';
+  end if;
+
+if ( :OLD.DEAL_TYPE <> 'STOCK' OR :NEW.DEAL_TYPE <> 'STOCK' ) then  -- bug 6795649
+
+XTR_COF_P.MAINTAIN_COST_OF_FUND(
+ OLD_AS_AT_DATE                 => :OLD.AS_AT_DATE,
+ OLD_COMPANY_CODE               => :OLD.COMPANY_CODE,
+ OLD_CURRENCY                   => :OLD.CURRENCY,
+ OLD_DEAL_TYPE                  => :OLD.DEAL_TYPE,
+ OLD_DEAL_SUBTYPE               => :OLD.DEAL_SUBTYPE,
+ OLD_PRODUCT_TYPE               => :OLD.PRODUCT_TYPE,
+ OLD_PORTFOLIO_CODE             => :OLD.PORTFOLIO_CODE,
+ OLD_CPARTY_CODE                => :OLD.CPARTY_CODE,
+ OLD_CONTRA_CCY                 => :OLD.CONTRA_CCY,
+ OLD_CURRENCY_COMBINATION       => :OLD.CURRENCY_COMBINATION,
+ OLD_ACCOUNT_NO                 => :OLD.ACCOUNT_NO,
+ OLD_TRANSACTION_RATE           => :OLD.TRANSACTION_RATE,
+ OLD_YEAR_CALC_TYPE             => :OLD.YEAR_CALC_TYPE,
+ OLD_BASE_REF_AMOUNT            => :OLD.BASE_REF_AMOUNT,
+ OLD_HCE_BASE_REF_AMOUNT        => :OLD.HCE_BASE_REF_AMOUNT,
+ OLD_BASE_RATE                  => :OLD.BASE_RATE,
+ OLD_INTEREST			=> :OLD.INTEREST,
+ OLD_HCE_INTEREST		=> :OLD.HCE_INTEREST,
+ NEW_AS_AT_DATE                 => :NEW.AS_AT_DATE,
+ NEW_COMPANY_CODE               => :NEW.COMPANY_CODE,
+ NEW_CURRENCY                   => :NEW.CURRENCY,
+ NEW_DEAL_TYPE                  => :NEW.DEAL_TYPE,
+ NEW_DEAL_SUBTYPE               => :NEW.DEAL_SUBTYPE,
+ NEW_PRODUCT_TYPE               => :NEW.PRODUCT_TYPE,
+ NEW_PORTFOLIO_CODE             => :NEW.PORTFOLIO_CODE,
+ NEW_CPARTY_CODE                => :NEW.CPARTY_CODE,
+ NEW_CONTRA_CCY                 => :NEW.CONTRA_CCY,
+ NEW_CURRENCY_COMBINATION       => :NEW.CURRENCY_COMBINATION,
+ NEW_ACCOUNT_NO                 => :NEW.ACCOUNT_NO,
+ NEW_TRANSACTION_RATE           => :NEW.TRANSACTION_RATE,
+ NEW_YEAR_CALC_TYPE             => :NEW.YEAR_CALC_TYPE,
+ NEW_BASE_REF_AMOUNT            => :NEW.BASE_REF_AMOUNT,
+ NEW_HCE_BASE_REF_AMOUNT        => :NEW.HCE_BASE_REF_AMOUNT,
+ NEW_BASE_RATE                  => :NEW.BASE_RATE,
+ NEW_INTEREST                   => :NEW.INTEREST,
+ NEW_HCE_INTEREST               => :NEW.HCE_INTEREST,
+
+ P_ACTION                       => L_ACTION);
+end if;
+
+end;
+/
+ALTER TRIGGER "APPS"."XTR_AIUD_POSITION_HIS_T" ENABLE;

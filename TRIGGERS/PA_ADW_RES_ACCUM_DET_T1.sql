@@ -1,0 +1,67 @@
+--------------------------------------------------------
+--  DDL for Trigger PA_ADW_RES_ACCUM_DET_T1
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."PA_ADW_RES_ACCUM_DET_T1" 
+-- $Header: PATRIG01.pls 115.5 99/07/16 15:14:43 porting ship  $
+BEFORE DELETE ON
+"PA"."PA_RESOURCE_ACCUM_DETAILS"
+FOR EACH ROW
+
+DECLARE
+  X_ADW_LICENSED VARCHAR2(1) := NVL(FND_PROFILE.VALUE('PA_ADW_LICENSED'),'N');
+BEGIN
+
+--Fire Trigger only PA_ADW is Licensed
+ IF X_ADW_LICENSED <> 'Y' THEN
+    RETURN;
+ END IF;
+
+  -- Copy the row only if the resource details was transferred to the
+  -- warehouse
+  IF (:OLD.ADW_NOTIFY_FLAG = 'N') THEN
+    INSERT INTO PA_OLD_RES_ACCUM_DTLS(
+      TXN_ACCUM_ID,
+      RESOURCE_LIST_ASSIGNMENT_ID,
+      RESOURCE_LIST_ID,
+      RESOURCE_LIST_MEMBER_ID,
+      RESOURCE_ID,
+      PROJECT_ID,
+      TASK_ID,
+      LAST_UPDATED_BY,
+      LAST_UPDATE_DATE,
+      CREATION_DATE,
+      CREATED_BY,
+      LAST_UPDATE_LOGIN,
+      REQUEST_ID,
+      PROGRAM_APPLICATION_ID,
+      PROGRAM_ID,
+      PROGRAM_UPDATE_DATE,
+      ADW_NOTIFY_FLAG
+    ) VALUES
+    (
+      :OLD.TXN_ACCUM_ID,
+      :OLD.RESOURCE_LIST_ASSIGNMENT_ID,
+      :OLD.RESOURCE_LIST_ID,
+      :OLD.RESOURCE_LIST_MEMBER_ID,
+      :OLD.RESOURCE_ID,
+      :OLD.PROJECT_ID,
+      :OLD.TASK_ID,
+      FND_GLOBAL.USER_ID,
+      TRUNC(SYSDATE),
+      TRUNC(SYSDATE),
+      FND_GLOBAL.USER_ID,
+      FND_GLOBAL.LOGIN_ID,
+      FND_GLOBAL.CONC_REQUEST_ID,
+      FND_GLOBAL.PROG_APPL_ID,
+      FND_GLOBAL.CONC_PROGRAM_ID,
+      TRUNC(SYSDATE),
+      'Y'
+    );
+  END IF; -- IF (:OLD.ADW_NOTIFY_FLAG = 'N')
+END;
+
+
+
+/
+ALTER TRIGGER "APPS"."PA_ADW_RES_ACCUM_DET_T1" ENABLE;

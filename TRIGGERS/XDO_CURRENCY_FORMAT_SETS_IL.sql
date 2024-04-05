@@ -1,0 +1,22 @@
+--------------------------------------------------------
+--  DDL for Trigger XDO_CURRENCY_FORMAT_SETS_IL
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."XDO_CURRENCY_FORMAT_SETS_IL" 
+instead of insert on XDO_CURRENCY_FORMAT_SETS_VL
+referencing new as NEWROW
+for each row
+begin
+  XDO_CURRENCY_FORMAT_SETS_PKG.INSERT_ROW(
+          P_FORMAT_SET_CODE => :NEWROW.FORMAT_SET_CODE,
+          P_FORMAT_SET_NAME => :NEWROW.FORMAT_SET_NAME,
+          P_CREATION_DATE => :NEWROW.CREATION_DATE,
+          P_CREATED_BY => :NEWROW.CREATED_BY,
+          P_LAST_UPDATE_DATE => :NEWROW.LAST_UPDATE_DATE,
+          P_LAST_UPDATED_BY => :NEWROW.LAST_UPDATED_BY,
+          P_LAST_UPDATE_LOGIN => :NEWROW.LAST_UPDATE_LOGIN);
+end INSERT_ROW;
+
+
+/
+ALTER TRIGGER "APPS"."XDO_CURRENCY_FORMAT_SETS_IL" ENABLE;

@@ -1,0 +1,32 @@
+--------------------------------------------------------
+--  DDL for Trigger CZ_RP_ENTRIES_T2
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."CZ_RP_ENTRIES_T2" 
+BEFORE UPDATE OF deleted_flag
+ON "CZ"."CZ_RP_ENTRIES"
+REFERENCING OLD AS OLD NEW AS NEW
+DECLARE
+   V_ENCL_FOLD CZ_RP_ENTRIES.ENCLOSING_FOLDER%TYPE;
+   V_MIN_DEL_FLAG NUMBER;
+
+-- Cursor to fetch enclosing_folders and min of the deleted_flags
+-- for objects inside them
+   CURSOR C_CZ_RP_ENTRIES IS
+     SELECT ENCLOSING_FOLDER, MIN(DELETED_FLAG)
+     FROM CZ_RP_ENTRIES
+     GROUP BY ENCLOSING_FOLDER;
+BEGIN
+   CZ_RP_MGR.V_MIN_DELETED_FLAGS.DELETE;
+   OPEN C_CZ_RP_ENTRIES;
+   LOOP
+     FETCH C_CZ_RP_ENTRIES INTO V_ENCL_FOLD, V_MIN_DEL_FLAG;
+     EXIT WHEN C_CZ_RP_ENTRIES%NOTFOUND;
+     IF V_MIN_DEL_FLAG = '0' THEN
+       CZ_RP_MGR.V_MIN_DELETED_FLAGS(V_ENCL_FOLD) := V_MIN_DEL_FLAG;
+     END IF;
+   END LOOP;
+END;
+
+/
+ALTER TRIGGER "APPS"."CZ_RP_ENTRIES_T2" ENABLE;

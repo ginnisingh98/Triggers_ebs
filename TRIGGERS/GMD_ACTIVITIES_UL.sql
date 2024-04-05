@@ -1,0 +1,25 @@
+--------------------------------------------------------
+--  DDL for Trigger GMD_ACTIVITIES_UL
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."GMD_ACTIVITIES_UL" 
+/* $Header: gmdatutg.sql 120.1 2005/06/09 05:07:27 appldev  $ */
+instead of update on GMD_ACTIVITIES_VL
+referencing new as FM_ACTV_MST
+for each row
+begin
+  GMD_ACTIVITIES_PKG.UPDATE_ROW(
+    X_ACTIVITY => :FM_ACTV_MST.ACTIVITY,
+    X_COST_ANALYSIS_CODE => :FM_ACTV_MST.COST_ANALYSIS_CODE,
+    X_DELETE_MARK => :FM_ACTV_MST.DELETE_MARK,
+    X_TEXT_CODE => :FM_ACTV_MST.TEXT_CODE,
+    X_TRANS_CNT => :FM_ACTV_MST.TRANS_CNT,
+    X_ACTIVITY_DESC => :FM_ACTV_MST.ACTIVITY_DESC,
+    X_LAST_UPDATE_DATE => :FM_ACTV_MST.LAST_UPDATE_DATE,
+    X_LAST_UPDATED_BY => :FM_ACTV_MST.LAST_UPDATED_BY,
+    X_LAST_UPDATE_LOGIN => :FM_ACTV_MST.LAST_UPDATE_LOGIN);
+end UPDATE_ROW;
+
+
+/
+ALTER TRIGGER "APPS"."GMD_ACTIVITIES_UL" ENABLE;

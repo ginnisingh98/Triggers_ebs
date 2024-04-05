@@ -1,0 +1,29 @@
+--------------------------------------------------------
+--  DDL for Trigger GMA_OP_TEXT_TBL_T1
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."GMA_OP_TEXT_TBL_T1" 
+instead of insert on OP_TEXT_TBL_VL
+referencing new as OP_TEXT_TBL
+for each row
+declare
+  row_id rowid;
+begin
+  GMA_OP_TEXT_TBL_PKG.INSERT_ROW(
+    X_ROWID => ROW_ID,
+    X_TEXT_CODE => :OP_TEXT_TBL.TEXT_CODE,
+    X_LANG_CODE => :OP_TEXT_TBL.LANG_CODE,
+    X_PARAGRAPH_CODE => :OP_TEXT_TBL.PARAGRAPH_CODE,
+    X_SUB_PARACODE => :OP_TEXT_TBL.SUB_PARACODE,
+    X_LINE_NO => :OP_TEXT_TBL.LINE_NO,
+    X_TEXT => :OP_TEXT_TBL.TEXT,
+    X_CREATION_DATE => :OP_TEXT_TBL.CREATION_DATE,
+    X_CREATED_BY => :OP_TEXT_TBL.CREATED_BY,
+    X_LAST_UPDATE_DATE => :OP_TEXT_TBL.LAST_UPDATE_DATE,
+    X_LAST_UPDATED_BY => :OP_TEXT_TBL.LAST_UPDATED_BY,
+    X_LAST_UPDATE_LOGIN => :OP_TEXT_TBL.LAST_UPDATE_LOGIN);
+end INSERT_ROW;
+
+
+/
+ALTER TRIGGER "APPS"."GMA_OP_TEXT_TBL_T1" ENABLE;

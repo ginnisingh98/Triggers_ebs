@@ -1,0 +1,17 @@
+--------------------------------------------------------
+--  DDL for Trigger CZ_UI_NODES_TP1
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."CZ_UI_NODES_TP1" 
+BEFORE INSERT
+ON "CZ"."CZ_UI_NODES"
+ REFERENCING OLD AS OLD NEW AS NEW
+ FOR EACH ROW
+BEGIN
+	IF :NEW.PERSISTENT_UI_NODE_ID IS NULL THEN
+   :new.PERSISTENT_UI_NODE_ID:=:NEW.UI_NODE_ID;
+END IF;
+END;
+
+/
+ALTER TRIGGER "APPS"."CZ_UI_NODES_TP1" ENABLE;

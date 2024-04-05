@@ -1,0 +1,30 @@
+--------------------------------------------------------
+--  DDL for Trigger FEM_FOLDERS_IL
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."FEM_FOLDERS_IL" 
+instead of insert on FEM_FOLDERS_VL
+referencing new as FEM_FOLDERS_B
+for each row
+declare
+  row_id rowid;
+ ---
+begin
+  FEM_FOLDERS_PKG.INSERT_ROW(
+    X_ROWID => ROW_ID,
+    X_FOLDER_ID => :FEM_FOLDERS_B.FOLDER_ID,
+    X_OBJECT_VERSION_NUMBER => :FEM_FOLDERS_B.OBJECT_VERSION_NUMBER,
+    X_FOLDER_NAME => :FEM_FOLDERS_B.FOLDER_NAME,
+    X_DESCRIPTION => :FEM_FOLDERS_B.DESCRIPTION,
+    X_CREATION_DATE => :FEM_FOLDERS_B.CREATION_DATE,
+    X_CREATED_BY => :FEM_FOLDERS_B.CREATED_BY,
+    X_LAST_UPDATE_DATE => :FEM_FOLDERS_B.LAST_UPDATE_DATE,
+    X_LAST_UPDATED_BY => :FEM_FOLDERS_B.LAST_UPDATED_BY,
+    X_LAST_UPDATE_LOGIN => :FEM_FOLDERS_B.LAST_UPDATE_LOGIN);
+ ---
+end INSERT_ROW;
+ ---
+
+
+/
+ALTER TRIGGER "APPS"."FEM_FOLDERS_IL" ENABLE;

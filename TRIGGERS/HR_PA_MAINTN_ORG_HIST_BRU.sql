@@ -1,0 +1,96 @@
+--------------------------------------------------------
+--  DDL for Trigger HR_PA_MAINTN_ORG_HIST_BRU
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."HR_PA_MAINTN_ORG_HIST_BRU" 
+BEFORE UPDATE OF
+ORG_INFORMATION1
+ON "HR"."HR_ORGANIZATION_INFORMATION"
+FOR EACH ROW
+DECLARE
+  v_return_status      VARCHAR2(2000);
+  v_error_message_code VARCHAR2(2000);
+  v_msg_data           VARCHAR2(2000);
+  v_msg_count          NUMBER;
+  l_exists             VARCHAR2(1) := 'N';
+  l_pa_class           VARCHAR2(1) := 'N';
+BEGIN
+
+       v_return_status := FND_API.G_RET_STS_SUCCESS;
+
+       -- Bug 2917985 - Added check for use of PJR/Utilization
+       -- Add an additional OR to check whether resource's organization
+       -- already in pa_resources_denorm.
+       BEGIN
+       SELECT 'Y'
+       INTO   l_exists
+       FROM   dual
+       WHERE  exists (SELECT 'Y'
+                      FROM   pa_resources_denorm
+                      WHERE  resource_organization_id = :new.organization_id
+                      AND    rownum = 1);
+       EXCEPTION
+          WHEN NO_DATA_FOUND THEN
+             l_exists := 'N';
+       END;
+
+       IF (l_exists = 'Y' OR
+           PA_INSTALL.is_prm_licensed = 'Y' OR
+           PA_INSTALL.is_utilization_implemented = 'Y') THEN
+
+          -- if the organization is of type Expenditure type then
+          -- call the work flow to update pa objects
+
+          -- Add a check to see if the organization has a classification
+          -- of PA Exp Org, since in R12, the OU can be entered for
+          -- HR orgs also.  Only want to update if the info context is
+          -- Exp Organization Defaults and the class of PA Exp Org
+          -- exists, even if the update is happening via the HR class.
+
+          -- Fixed bug 4669716 - Have to comment out this check
+          -- because of mutation errors. Cannot select from the
+          -- same table that is being updated.
+
+          /*
+          BEGIN
+          SELECT 'Y'
+          INTO   l_pa_class
+          FROM   hr_organization_information
+          WHERE  organization_id = :new.organization_id
+          AND    org_information1 = 'PA_EXPENDITURE_ORG'
+          AND    org_information_context = 'CLASS'
+          AND    rownum = 1;
+
+          EXCEPTION WHEN NO_DATA_FOUND THEN
+             l_pa_class := 'N';
+          END;
+          */
+
+          l_pa_class := 'Y';
+
+          If ((:new.org_information_context = 'Exp Organization Defaults' OR
+               :old.org_information_context = 'Exp Organization Defaults') AND
+               l_pa_class = 'Y') OR
+             :new.org_information_context = 'Project Resource Job Group' OR
+             :old.org_information_context = 'Project Resource Job Group' Then
+
+             pa_hr_update_pa_entities.update_project_entities(
+                 p_calling_mode       => 'UPDATE'
+                ,p_table_name         => 'HR_ORGANIZATION_INFORMATION'
+                ,p_org_id_new         => :new.organization_id
+                ,p_org_info1_new      => :new.org_information1
+                ,p_org_info1_old      => :old.org_information1
+                ,p_org_info_context   => :new.org_information_context
+                ,x_return_status      => v_return_status
+                ,x_error_message_code => v_error_message_code);
+
+         end if;
+      END IF;
+
+Exception
+	When OTHERS then
+          raise;
+END;
+
+/
+ALTER TRIGGER "APPS"."HR_PA_MAINTN_ORG_HIST_BRU" ENABLE;

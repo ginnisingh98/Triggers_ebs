@@ -1,0 +1,8 @@
+--------------------------------------------------------
+--  DDL for Trigger IBY_EXT_BANK_ACCOUNTS_AI
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."IBY_EXT_BANK_ACCOUNTS_AI" AFTER INSERT ON "IBY"."IBY_EXT_BANK_ACCOUNTS" FOR EACH ROW BEGIN IF fnd_audit_pkg.audit_on THEN IBY_EXT_BANK_ACCOUNTS_AIP(:old.EXT_BANK_ACCOUNT_ID,:old.BANK_ACCOUNT_NUM,:old.END_DATE,:old.IBAN,:old.START_DATE,:new.EXT_BANK_ACCOUNT_ID,:new.BANK_ACCOUNT_NUM,:new.END_DATE,:new.IBAN,:new.START_DATE);END IF;END;
+
+/
+ALTER TRIGGER "APPS"."IBY_EXT_BANK_ACCOUNTS_AI" ENABLE;

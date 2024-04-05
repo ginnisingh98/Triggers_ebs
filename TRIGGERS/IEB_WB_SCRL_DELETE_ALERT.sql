@@ -1,0 +1,16 @@
+--------------------------------------------------------
+--  DDL for Trigger IEB_WB_SCRL_DELETE_ALERT
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."IEB_WB_SCRL_DELETE_ALERT" 
+ AFTER DELETE
+ ON "IEB"."IEB_WB_SVC_CAT_RULES"
+ FOR EACH ROW
+BEGIN
+DBMS_ALERT.SIGNAL('IEB_WB_SCRL_DELETE_ALERT', TO_CHAR(:old.WBSCRULE_ID));
+END IEB_WB_SCRL_DELETE_ALERT;
+
+
+
+/
+ALTER TRIGGER "APPS"."IEB_WB_SCRL_DELETE_ALERT" ENABLE;

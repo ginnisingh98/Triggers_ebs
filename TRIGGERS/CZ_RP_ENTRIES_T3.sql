@@ -1,0 +1,27 @@
+--------------------------------------------------------
+--  DDL for Trigger CZ_RP_ENTRIES_T3
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."CZ_RP_ENTRIES_T3" 
+BEFORE UPDATE OF deleted_flag
+ON "CZ"."CZ_RP_ENTRIES"
+REFERENCING OLD AS OLD NEW AS NEW
+FOR EACH ROW
+  WHEN (OLD.OBJECT_TYPE = 'FLD') DECLARE
+   NOT_EMPTY_FOLDER EXCEPTION;
+   CURRENT_OBJECT_ID NUMBER;
+BEGIN
+  IF :new.deleted_flag = '1' THEN
+    CURRENT_OBJECT_ID := :OLD.OBJECT_ID;
+    IF CZ_RP_MGR.V_MIN_DELETED_FLAGS.EXISTS(CURRENT_OBJECT_ID) THEN
+      RAISE NOT_EMPTY_FOLDER;
+    END IF;
+  END IF;
+EXCEPTION
+   WHEN NOT_EMPTY_FOLDER THEN
+     RAISE_APPLICATION_ERROR (-20001,
+      'Deletions of the not-empty folders is not allowed');
+END;
+
+/
+ALTER TRIGGER "APPS"."CZ_RP_ENTRIES_T3" ENABLE;

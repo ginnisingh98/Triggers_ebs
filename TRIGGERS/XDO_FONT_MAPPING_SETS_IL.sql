@@ -1,0 +1,23 @@
+--------------------------------------------------------
+--  DDL for Trigger XDO_FONT_MAPPING_SETS_IL
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."XDO_FONT_MAPPING_SETS_IL" 
+instead of insert on XDO_FONT_MAPPING_SETS_VL
+referencing new as NEWROW
+for each row
+begin
+  XDO_FONT_MAPPING_SETS_PKG.INSERT_ROW(
+          P_MAPPING_CODE => :NEWROW.MAPPING_CODE,
+          P_MAPPING_NAME => :NEWROW.MAPPING_NAME,
+          P_MAPPING_TYPE  => :NEWROW.MAPPING_TYPE,
+          P_CREATION_DATE => :NEWROW.CREATION_DATE,
+          P_CREATED_BY => :NEWROW.CREATED_BY,
+          P_LAST_UPDATE_DATE => :NEWROW.LAST_UPDATE_DATE,
+          P_LAST_UPDATED_BY => :NEWROW.LAST_UPDATED_BY,
+          P_LAST_UPDATE_LOGIN => :NEWROW.LAST_UPDATE_LOGIN);
+end INSERT_ROW;
+
+
+/
+ALTER TRIGGER "APPS"."XDO_FONT_MAPPING_SETS_IL" ENABLE;

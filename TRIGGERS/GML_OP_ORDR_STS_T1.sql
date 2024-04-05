@@ -1,0 +1,33 @@
+--------------------------------------------------------
+--  DDL for Trigger GML_OP_ORDR_STS_T1
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."GML_OP_ORDR_STS_T1" 
+/* $Header: GMLOSTST.sql 115.2 99/07/16 06:16:01 porting ship  $ */
+instead of insert on OP_ORDR_STS_VL
+referencing new as OP_ORDR_STS
+for each row
+
+declare
+  row_id rowid;
+begin
+  GML_OP_ORDR_STS_PKG.INSERT_ROW(
+    X_ROWID => ROW_ID,
+    X_ORDER_STATUS => :OP_ORDR_STS.ORDER_STATUS,
+    X_LANG_CODE => :OP_ORDR_STS.LANG_CODE,
+    X_TRANS_CNT => :OP_ORDR_STS.TRANS_CNT,
+    X_TEXT_CODE => :OP_ORDR_STS.TEXT_CODE,
+    X_DELETE_MARK => :OP_ORDR_STS.DELETE_MARK,
+    X_ORDER_STATUS_CODE => :OP_ORDR_STS.ORDER_STATUS_CODE,
+    X_ORDER_STATUS_DESC => :OP_ORDR_STS.ORDER_STATUS_DESC,
+    X_CREATION_DATE => :OP_ORDR_STS.CREATION_DATE,
+    X_CREATED_BY => :OP_ORDR_STS.CREATED_BY,
+    X_LAST_UPDATE_DATE => :OP_ORDR_STS.LAST_UPDATE_DATE,
+    X_LAST_UPDATED_BY => :OP_ORDR_STS.LAST_UPDATED_BY,
+    X_LAST_UPDATE_LOGIN => :OP_ORDR_STS.LAST_UPDATE_LOGIN);
+end INSERT_ROW;
+
+
+
+/
+ALTER TRIGGER "APPS"."GML_OP_ORDR_STS_T1" ENABLE;

@@ -1,0 +1,29 @@
+--------------------------------------------------------
+--  DDL for Trigger GMD_OPERATION_CLASS_IL
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."GMD_OPERATION_CLASS_IL" 
+/* $Header: gmdocitg.sql 120.1 2005/06/09 05:17:28 appldev  $ */
+instead of insert on GMD_OPERATION_CLASS_VL
+referencing new as FM_OPRN_CLS
+for each row
+declare
+  row_id rowid;
+begin
+  GMD_OPERATION_CLASS_PKG.INSERT_ROW(
+    X_ROWID => ROW_ID,
+    X_OPRN_CLASS => :FM_OPRN_CLS.OPRN_CLASS,
+    X_TRANS_CNT => :FM_OPRN_CLS.TRANS_CNT,
+    X_DELETE_MARK => :FM_OPRN_CLS.DELETE_MARK,
+    X_TEXT_CODE => :FM_OPRN_CLS.TEXT_CODE,
+    X_OPRN_CLASS_DESC => :FM_OPRN_CLS.OPRN_CLASS_DESC,
+    X_CREATION_DATE => :FM_OPRN_CLS.CREATION_DATE,
+    X_CREATED_BY => :FM_OPRN_CLS.CREATED_BY,
+    X_LAST_UPDATE_DATE => :FM_OPRN_CLS.LAST_UPDATE_DATE,
+    X_LAST_UPDATED_BY => :FM_OPRN_CLS.LAST_UPDATED_BY,
+    X_LAST_UPDATE_LOGIN => :FM_OPRN_CLS.LAST_UPDATE_LOGIN);
+end INSERT_ROW;
+
+
+/
+ALTER TRIGGER "APPS"."GMD_OPERATION_CLASS_IL" ENABLE;

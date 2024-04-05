@@ -1,0 +1,30 @@
+--------------------------------------------------------
+--  DDL for Trigger GMD_ACTIVITIES_IL
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."GMD_ACTIVITIES_IL" 
+/* $Header: gmdatitg.sql 120.1 2005/06/09 05:07:04 appldev  $ */
+instead of insert on GMD_ACTIVITIES_VL
+referencing new as FM_ACTV_MST
+for each row
+declare
+  row_id rowid;
+begin
+  GMD_ACTIVITIES_PKG.INSERT_ROW(
+    X_ROWID => ROW_ID,
+    X_ACTIVITY => :FM_ACTV_MST.ACTIVITY,
+    X_COST_ANALYSIS_CODE => :FM_ACTV_MST.COST_ANALYSIS_CODE,
+    X_DELETE_MARK => :FM_ACTV_MST.DELETE_MARK,
+    X_TEXT_CODE => :FM_ACTV_MST.TEXT_CODE,
+    X_TRANS_CNT => :FM_ACTV_MST.TRANS_CNT,
+    X_ACTIVITY_DESC => :FM_ACTV_MST.ACTIVITY_DESC,
+    X_CREATION_DATE => :FM_ACTV_MST.CREATION_DATE,
+    X_CREATED_BY => :FM_ACTV_MST.CREATED_BY,
+    X_LAST_UPDATE_DATE => :FM_ACTV_MST.LAST_UPDATE_DATE,
+    X_LAST_UPDATED_BY => :FM_ACTV_MST.LAST_UPDATED_BY,
+    X_LAST_UPDATE_LOGIN => :FM_ACTV_MST.LAST_UPDATE_LOGIN);
+end INSERT_ROW;
+
+
+/
+ALTER TRIGGER "APPS"."GMD_ACTIVITIES_IL" ENABLE;

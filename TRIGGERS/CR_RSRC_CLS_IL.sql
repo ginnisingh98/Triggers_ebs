@@ -1,0 +1,28 @@
+--------------------------------------------------------
+--  DDL for Trigger CR_RSRC_CLS_IL
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."CR_RSRC_CLS_IL" 
+instead of insert on CR_RSRC_CLS_VL
+referencing new as CR_RSRC_CLS
+for each row
+declare
+  row_id rowid;
+begin
+  CR_RSRC_CLS_PKG.INSERT_ROW(
+    X_ROWID => ROW_ID,
+    X_RESOURCE_CLASS => :CR_RSRC_CLS.RESOURCE_CLASS,
+    X_TRANS_CNT => :CR_RSRC_CLS.TRANS_CNT,
+    X_DELETE_MARK => :CR_RSRC_CLS.DELETE_MARK,
+    X_TEXT_CODE => :CR_RSRC_CLS.TEXT_CODE,
+    X_RESOURCE_CLASS_DESC => :CR_RSRC_CLS.RESOURCE_CLASS_DESC,
+    X_CREATION_DATE => :CR_RSRC_CLS.CREATION_DATE,
+    X_CREATED_BY => :CR_RSRC_CLS.CREATED_BY,
+    X_LAST_UPDATE_DATE => :CR_RSRC_CLS.LAST_UPDATE_DATE,
+    X_LAST_UPDATED_BY => :CR_RSRC_CLS.LAST_UPDATED_BY,
+    X_LAST_UPDATE_LOGIN => :CR_RSRC_CLS.LAST_UPDATE_LOGIN);
+end INSERT_ROW;
+
+
+/
+ALTER TRIGGER "APPS"."CR_RSRC_CLS_IL" ENABLE;

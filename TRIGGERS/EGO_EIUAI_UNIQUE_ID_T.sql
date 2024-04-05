@@ -1,0 +1,26 @@
+--------------------------------------------------------
+--  DDL for Trigger EGO_EIUAI_UNIQUE_ID_T
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."EGO_EIUAI_UNIQUE_ID_T" 
+
+BEFORE INSERT
+    ON "EGO"."EGO_ITM_USR_ATTR_INTRFC"
+FOR EACH ROW
+
+DECLARE
+    l_date DATE := SYSDATE;
+BEGIN
+    :NEW.LAST_UPDATE_DATE   := l_date;
+    :NEW.CREATION_DATE      := l_date;
+    IF :NEW.INTERFACE_TABLE_UNIQUE_ID IS NULL THEN
+        SELECT EGO_IMPORT_ROW_SEQ_S.NEXTVAL
+        INTO :NEW.INTERFACE_TABLE_UNIQUE_ID
+        FROM DUAL;
+    END IF;
+
+END EGO_EIUAI_UNIQUE_ID_T;
+
+
+/
+ALTER TRIGGER "APPS"."EGO_EIUAI_UNIQUE_ID_T" ENABLE;

@@ -1,0 +1,51 @@
+--------------------------------------------------------
+--  DDL for Trigger FEM_COL_POPULATION_TMPLT_IL
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."FEM_COL_POPULATION_TMPLT_IL" 
+/* $Header: fem_col_pop_tmp.sql 120.0 2005/06/06 20:23:54 appldev noship $
+*=======================================================================+
+|            Copyright (c) 1996-2005  Oracle Corporation                |
+|                       Redwood Shores, CA, USA                         |
+|                         All rights reserved.                          |
++=======================================================================+
+| TRIGGERNAME                                                           |
+|     FEM_COL_POPULATION_TMPLT_IL                                       |
+|                                                                       |
++======================================================================*/
+instead of insert on FEM_COL_POPULATION_TMPLT_VL
+referencing new as FEM_COL_POPULATION
+for each row
+declare
+  row_id rowid;
+begin
+  FEM_COL_POPULATION_TMPLT_PKG.INSERT_ROW(
+    X_ROWID => ROW_ID,
+    X_COL_POP_TEMPLT_OBJ_DEF_ID => :FEM_COL_POPULATION.COL_POP_TEMPLT_OBJ_DEF_ID,
+    X_SOURCE_TABLE_NAME => :FEM_COL_POPULATION.SOURCE_TABLE_NAME,
+    X_TARGET_COLUMN_NAME => :FEM_COL_POPULATION.TARGET_COLUMN_NAME,
+    X_TARGET_TABLE_NAME => :FEM_COL_POPULATION.TARGET_TABLE_NAME,
+    X_DATA_POPULATION_METHOD_CODE => :FEM_COL_POPULATION.DATA_POPULATION_METHOD_CODE,
+    X_SOURCE_COLUMN_NAME => :FEM_COL_POPULATION.SOURCE_COLUMN_NAME,
+    X_DIMENSION_ID => :FEM_COL_POPULATION.DIMENSION_ID,
+    X_ATTRIBUTE_ID => :FEM_COL_POPULATION.ATTRIBUTE_ID,
+    X_ATTRIBUTE_VERSION_ID => :FEM_COL_POPULATION.ATTRIBUTE_VERSION_ID,
+    X_AGGREGATION_METHOD => :FEM_COL_POPULATION.AGGREGATION_METHOD,
+    X_CONSTANT_NUMERIC_VALUE => :FEM_COL_POPULATION.CONSTANT_NUMERIC_VALUE,
+    X_CONSTANT_ALPHANUMERIC_VALUE => :FEM_COL_POPULATION.CONSTANT_ALPHANUMERIC_VALUE,
+    X_CONSTANT_DATE_VALUE => :FEM_COL_POPULATION.CONSTANT_DATE_VALUE,
+    X_OBJECT_VERSION_NUMBER => :FEM_COL_POPULATION.OBJECT_VERSION_NUMBER,
+    X_SYSTEM_RESERVED_FLAG => :FEM_COL_POPULATION.SYSTEM_RESERVED_FLAG,
+    X_ENG_PROC_PARAM => :FEM_COL_POPULATION.ENG_PROC_PARAM,
+    X_PARAMETER_FLAG => :FEM_COL_POPULATION.PARAMETER_FLAG,
+    X_DESCRIPTION => :FEM_COL_POPULATION.DESCRIPTION,
+    X_CREATION_DATE => :FEM_COL_POPULATION.CREATION_DATE,
+    X_CREATED_BY => :FEM_COL_POPULATION.CREATED_BY,
+    X_LAST_UPDATE_DATE => :FEM_COL_POPULATION.LAST_UPDATE_DATE,
+    X_LAST_UPDATED_BY => :FEM_COL_POPULATION.LAST_UPDATED_BY,
+    X_LAST_UPDATE_LOGIN => :FEM_COL_POPULATION.LAST_UPDATE_LOGIN);
+END FEM_COL_POPULATION_TMPLT_IL;
+
+
+/
+ALTER TRIGGER "APPS"."FEM_COL_POPULATION_TMPLT_IL" ENABLE;

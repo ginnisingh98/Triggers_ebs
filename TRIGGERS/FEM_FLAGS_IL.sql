@@ -1,0 +1,32 @@
+--------------------------------------------------------
+--  DDL for Trigger FEM_FLAGS_IL
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."FEM_FLAGS_IL" 
+instead of insert on FEM_FLAGS_VL
+referencing new as FEM_FLAGS_B
+for each row
+declare
+  row_id rowid;
+ ---
+begin
+  FEM_FLAGS_PKG.INSERT_ROW(
+    X_ROWID => ROW_ID,
+    X_FLAG_CODE => :FEM_FLAGS_B.FLAG_CODE,
+    X_READ_ONLY_FLAG => :FEM_FLAGS_B.READ_ONLY_FLAG,
+    X_PERSONAL_FLAG => :FEM_FLAGS_B.PERSONAL_FLAG,
+    X_ENABLED_FLAG => :FEM_FLAGS_B.ENABLED_FLAG,
+    X_FLAG_NAME => :FEM_FLAGS_B.FLAG_NAME,
+    X_DESCRIPTION => :FEM_FLAGS_B.DESCRIPTION,
+    X_CREATION_DATE => :FEM_FLAGS_B.CREATION_DATE,
+    X_CREATED_BY => :FEM_FLAGS_B.CREATED_BY,
+    X_LAST_UPDATE_DATE => :FEM_FLAGS_B.LAST_UPDATE_DATE,
+    X_LAST_UPDATED_BY => :FEM_FLAGS_B.LAST_UPDATED_BY,
+    X_LAST_UPDATE_LOGIN => :FEM_FLAGS_B.LAST_UPDATE_LOGIN);
+ ---
+end INSERT_ROW;
+ ---
+
+
+/
+ALTER TRIGGER "APPS"."FEM_FLAGS_IL" ENABLE;

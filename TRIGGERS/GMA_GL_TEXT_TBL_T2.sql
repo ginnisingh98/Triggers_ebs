@@ -1,0 +1,26 @@
+--------------------------------------------------------
+--  DDL for Trigger GMA_GL_TEXT_TBL_T2
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."GMA_GL_TEXT_TBL_T2" 
+instead of update on GL_TEXT_TBL_VL
+referencing old as GL_TEXT_TBL
+for each row
+begin
+  GMA_GL_TEXT_TBL_PKG.UPDATE_ROW(
+    X_ROW_ID => :GL_TEXT_TBL.ROW_ID,
+-- Bug #1806284 (JKB)
+    X_TEXT_CODE => :GL_TEXT_TBL.TEXT_CODE,
+    X_LANG_CODE => :GL_TEXT_TBL.LANG_CODE,
+    X_PARAGRAPH_CODE => :GL_TEXT_TBL.PARAGRAPH_CODE,
+    X_SUB_PARACODE => :GL_TEXT_TBL.SUB_PARACODE,
+    X_LINE_NO => :GL_TEXT_TBL.LINE_NO,
+    X_TEXT => :GL_TEXT_TBL.TEXT,
+    X_LAST_UPDATE_DATE => :GL_TEXT_TBL.LAST_UPDATE_DATE,
+    X_LAST_UPDATED_BY => :GL_TEXT_TBL.LAST_UPDATED_BY,
+    X_LAST_UPDATE_LOGIN => :GL_TEXT_TBL.LAST_UPDATE_LOGIN);
+end UPDATE_ROW;
+
+
+/
+ALTER TRIGGER "APPS"."GMA_GL_TEXT_TBL_T2" ENABLE;

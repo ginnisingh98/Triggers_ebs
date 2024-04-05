@@ -1,0 +1,17 @@
+--------------------------------------------------------
+--  DDL for Trigger XTR_AI_CURRENCY_CROSS_RATES_T
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."XTR_AI_CURRENCY_CROSS_RATES_T" 
+ AFTER INSERT on "XTR"."XTR_CURRENCY_CROSS_RATES"
+ FOR EACH ROW
+ --
+ begin
+   update XTR_BUY_SELL_COMBINATIONS
+     set LATEST_CROSS_RATE = ((:NEW.BID_RATE + :NEW.OFFER_RATE) / 2),
+         LATEST_CROSS_DATE = SYSDATE
+     where CURRENCY_FIRST = :NEW.CURRENCY_FIRST
+     and CURRENCY_SECOND = :NEW.CURRENCY_SECOND;
+ end;
+/
+ALTER TRIGGER "APPS"."XTR_AI_CURRENCY_CROSS_RATES_T" ENABLE;

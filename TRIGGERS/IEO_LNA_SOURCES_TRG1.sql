@@ -1,0 +1,17 @@
+--------------------------------------------------------
+--  DDL for Trigger IEO_LNA_SOURCES_TRG1
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."IEO_LNA_SOURCES_TRG1" 
+ AFTER UPDATE OF LOG_LEVEL
+ ON "IEO"."IEO_LNA_SOURCES"
+ FOR EACH ROW
+
+BEGIN
+DBMS_ALERT.SIGNAL('IEO_LNA_SOURCES_TRG1', TO_CHAR(:new.SOURCE_ID)||':'||(TO_CHAR(:new.LOG_LEVEL)));
+END IEO_LNA_SOURCES_TRG1;
+
+
+
+/
+ALTER TRIGGER "APPS"."IEO_LNA_SOURCES_TRG1" ENABLE;

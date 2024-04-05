@@ -1,0 +1,15 @@
+--------------------------------------------------------
+--  DDL for Trigger JTF_DAC_CRITERIA_TR2
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."JTF_DAC_CRITERIA_TR2" 
+AFTER DELETE ON JTF.JTF_DAC_CRITERIA
+FOR EACH ROW
+BEGIN
+DELETE FROM JTF_DAC_ROLE_PERM_CRIT
+  WHERE JTF_DAC_ROLE_PERM_CRIT.CRITERIA_ID = :old.CRITERIA_ID ;
+END ;
+
+
+/
+ALTER TRIGGER "APPS"."JTF_DAC_CRITERIA_TR2" ENABLE;

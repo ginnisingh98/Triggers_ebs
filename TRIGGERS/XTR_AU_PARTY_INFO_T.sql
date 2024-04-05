@@ -1,0 +1,70 @@
+--------------------------------------------------------
+--  DDL for Trigger XTR_AU_PARTY_INFO_T
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."XTR_AU_PARTY_INFO_T" 
+ AFTER UPDATE ON "XTR"."XTR_PARTY_INFO"
+ FOR EACH ROW
+declare
+ cursor CHK_AUDIT is
+  select nvl(AUDIT_YN,'N')
+   from XTR_SETUP_AUDIT_REQMTS
+   where rtrim(EVENT) = 'PARTIES';
+ --
+ l_val VARCHAR2(1);
+ --
+begin
+ -- Check that Audit on this table has been specified
+ open CHK_AUDIT;
+  fetch CHK_AUDIT INTO l_val;
+ if CHK_AUDIT%NOTFOUND then
+  l_val := 'N';
+ end if;
+ close CHK_AUDIT;
+ -- Copy to Audit Table the Pre-Updated row
+ if nvl(upper(l_val),'N') = 'Y' then
+   INSERT INTO XTR_A_PARTY_INFO(
+      PARTY_CODE, PARTY_TYPE, SHORT_NAME, FULL_NAME,
+      DEFAULT_COMPANY, RISK_PARTY, CREATED_BY,
+      CREATED_ON, UPDATED_BY, UPDATED_ON,
+      CONTACT_NAME, PHONE_NUMBER,
+      FAX_NUMBER, ADDRESS_1, ADDRESS_2, ADDRESS_3,
+      ADDRESS_4, ADDRESS_5, ADDRESS_6, COUNTRY_CODE,
+      AUTHORISED, TAX_NUMBER, INTERNAL_PTY,
+      PARTY_CATEGORY, BROKER, CLIENT_YN,
+      CROSS_REF_TO_OTHER_PARTY,
+      CLIENT_GROUPING, STATE_CODE, TITLE_DESCRIPTION,
+      PARTY_GROUP, SETTLEMENT_DEFAULT_CATEGORY,
+      TAX_CATEGORY, BROKERAGE_CATEGORY, TAX_EXEMPTION_CODE,
+      CLIENT_ADVICE, CLIENT_AGENT1, CLIENT_AGENT2,
+      CLIENT_AGENT3, ACCOUNT_MANAGER, AUDIT_INDICATOR,
+      ADVISOR_YN, VALUER_YN, P_ADDRESS_1, P_ADDRESS_2,
+      P_ADDRESS_3, P_ADDRESS_4, EMAIL_ADDRESS,
+      DEPOSIT_REF, PI_CONSTANT, COMMENTS, ACCOUNT_STATUS,
+      CONFO_GROUP_CODE, AUDIT_DATE_STORED)
+      VALUES (
+      :old.PARTY_CODE, :old.PARTY_TYPE, :old.SHORT_NAME, :old.FULL_NAME,
+      :old.DEFAULT_COMPANY, :old.RISK_PARTY, :old.CREATED_BY,
+      :old.CREATED_ON, :old.UPDATED_BY, sysdate,
+      :old.CONTACT_NAME, :old.PHONE_NUMBER,
+      :old.FAX_NUMBER, :old.ADDRESS_1, :old.ADDRESS_2, :old.ADDRESS_3,
+      :old.ADDRESS_4, :old.ADDRESS_5, :old.ADDRESS_6, :old.COUNTRY_CODE,
+      :old.AUTHORISED, :old.TAX_NUMBER, :old.INTERNAL_PTY,
+      :old.PARTY_CATEGORY, :old.BROKER, :old.CLIENT_YN,
+      :old.CROSS_REF_TO_OTHER_PARTY,
+      :old.CLIENT_GROUPING, :old.STATE_CODE, :old.TITLE_DESCRIPTION,
+      :old.PARTY_GROUP, :old.SETTLEMENT_DEFAULT_CATEGORY,
+      :old.TAX_CATEGORY, :old.BROKERAGE_CATEGORY,
+      :old.TAX_EXEMPTION_CODE,
+      :old.CLIENT_ADVICE, :old.CLIENT_AGENT1, :old.CLIENT_AGENT2,
+      :old.CLIENT_AGENT3, :old.ACCOUNT_MANAGER, :old.AUDIT_INDICATOR,
+      :old.ADVISOR_YN, :old.VALUER_YN, :old.P_ADDRESS_1, :old.P_ADDRESS_2,
+      :old.P_ADDRESS_3, :old.P_ADDRESS_4, :old.EMAIL_ADDRESS,
+      :old.DEPOSIT_REF, :old.PI_CONSTANT, :old.COMMENTS,
+      :old.ACCOUNT_STATUS,
+      :old.CONFO_GROUP_CODE, to_date(to_char(sysdate,'DD/MM/YYYY HH24:MI:SS'),
+      'DD/MM/YYYY HH24:MI:SS'));
+end if;
+end;
+/
+ALTER TRIGGER "APPS"."XTR_AU_PARTY_INFO_T" ENABLE;

@@ -1,0 +1,28 @@
+--------------------------------------------------------
+--  DDL for Trigger GML_OP_ORDR_STS_T2
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."GML_OP_ORDR_STS_T2" 
+/* $Header: GMLOS2TG.sql 115.4 1999/12/07 11:08:35 pkm ship   $ */
+instead of update on OP_ORDR_STS_VL
+referencing old as OP_ORDR_STS
+for each row
+
+begin
+  GML_OP_ORDR_STS_PKG.UPDATE_ROW(
+    X_ORDER_STATUS => :OP_ORDR_STS.ORDER_STATUS,
+    X_LANG_CODE => :OP_ORDR_STS.LANG_CODE,
+    X_TRANS_CNT => :OP_ORDR_STS.TRANS_CNT,
+    X_TEXT_CODE => :OP_ORDR_STS.TEXT_CODE,
+    X_DELETE_MARK => :OP_ORDR_STS.DELETE_MARK,
+    X_ORDER_STATUS_CODE => :NEW.ORDER_STATUS_CODE,
+    X_ORDER_STATUS_DESC => :NEW.ORDER_STATUS_DESC,
+    X_LAST_UPDATE_DATE => :NEW.LAST_UPDATE_DATE,
+    X_LAST_UPDATED_BY => :NEW.LAST_UPDATED_BY,
+    X_LAST_UPDATE_LOGIN => :NEW.LAST_UPDATE_LOGIN);
+end UPDATE_ROW;
+
+
+
+/
+ALTER TRIGGER "APPS"."GML_OP_ORDR_STS_T2" ENABLE;

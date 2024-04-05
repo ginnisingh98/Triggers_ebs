@@ -1,0 +1,29 @@
+--------------------------------------------------------
+--  DDL for Trigger GMD_FORMULA_CLASS_IL
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."GMD_FORMULA_CLASS_IL" 
+/* $Header: gmdfcitg.sql 120.1 2005/06/09 05:10:38 appldev  $ */
+instead of insert on GMD_FORMULA_CLASS_VL
+referencing new as FM_FORM_CLS
+for each row
+declare
+  row_id rowid;
+begin
+  GMD_FORMULA_CLASS_PKG.INSERT_ROW(
+    X_ROWID => ROW_ID,
+    X_FORMULA_CLASS => :FM_FORM_CLS.FORMULA_CLASS,
+    X_TRANS_CNT => :FM_FORM_CLS.TRANS_CNT,
+    X_DELETE_MARK => :FM_FORM_CLS.DELETE_MARK,
+    X_TEXT_CODE => :FM_FORM_CLS.TEXT_CODE,
+    X_FORMULA_CLASS_DESC => :FM_FORM_CLS.FORMULA_CLASS_DESC,
+    X_CREATION_DATE => :FM_FORM_CLS.CREATION_DATE,
+    X_CREATED_BY => :FM_FORM_CLS.CREATED_BY,
+    X_LAST_UPDATE_DATE => :FM_FORM_CLS.LAST_UPDATE_DATE,
+    X_LAST_UPDATED_BY => :FM_FORM_CLS.LAST_UPDATED_BY,
+    X_LAST_UPDATE_LOGIN => :FM_FORM_CLS.LAST_UPDATE_LOGIN);
+end INSERT_ROW;
+
+
+/
+ALTER TRIGGER "APPS"."GMD_FORMULA_CLASS_IL" ENABLE;

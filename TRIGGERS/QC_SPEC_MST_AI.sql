@@ -1,0 +1,8 @@
+--------------------------------------------------------
+--  DDL for Trigger QC_SPEC_MST_AI
+--------------------------------------------------------
+
+  CREATE OR REPLACE EDITIONABLE TRIGGER "APPS"."QC_SPEC_MST_AI" AFTER INSERT ON "GMD"."QC_SPEC_MST" FOR EACH ROW BEGIN IF fnd_audit_pkg.audit_on THEN QC_SPEC_MST_AIP(:old.QC_SPEC_ID,:old.ASSAY_CODE,:old.DELETE_MARK,:old.FROM_DATE,:old.ITEM_ID,:old.LOCATION,:old.LOT_ID,:old.MAX_SPEC,:old.MIN_SPEC,:old.OUTACTION_CODE,:old.OUTACTION_INTERVAL,:old.PREFERENCE,:old.TARGET_SPEC,:old.TEXT_SPEC,:old.TO_DATE,:old.WHSE_CODE,:new.QC_SPEC_ID,:new.ASSAY_CODE,:new.DELETE_MARK,:new.FROM_DATE,:new.ITEM_ID,:new.LOCATION,:new.LOT_ID,:new.MAX_SPEC,:new.MIN_SPEC,:new.OUTACTION_CODE,:new.OUTACTION_INTERVAL,:new.PREFERENCE,:new.TARGET_SPEC,:new.TEXT_SPEC,:new.TO_DATE,:new.WHSE_CODE);END IF;END;
+
+/
+ALTER TRIGGER "APPS"."QC_SPEC_MST_AI" ENABLE;
